@@ -1,37 +1,31 @@
+// Source/PluginProcessor.h
+#ifndef PLUGINPROCESSOR_H_INCLUDED
+#define PLUGINPROCESSOR_H_INCLUDED
+
 #include <JuceHeader.h>
 
-class UnderVolAudioProcessor : public juce::AudioProcessor
+class ReverseGateDSPProcessor : public AudioProcessor
 {
 public:
-    UnderVolAudioProcessor();
-    ~UnderVolAudioProcessor() override;
+    ReverseGateDSPProcessor();
+    ~ReverseGateDSPProcessor() override;
 
-    void prepareToPlay (double sampleRate, int samplesPerBlock) override;
+    void prepareToPlay(double sampleRate, int samplesPerBlock) override;
+    void processBlock(AudioBuffer<float>& buffer, MidiBuffer& midiMessages) override;
     void releaseResources() override;
-    void processBlock (juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
-    // Parameter definitions
-    enum Parameters
-    {
-        thresholdParam = 0,
-        ratioParam,
-        attackParam,
-        releaseParam,
-        numParameters
-    };
+    AudioProcessorValueTreeState parameters;
 
-    // Audio processing interface
-    void setParameter (int parameterIndex, float newValue);
-    float getParameter (int parameterIndex) const;
-    void getStateInformation (juce::MemoryBlock& destData) override;
-    void setStateInformation (const void* data, int sizeInBytes) override;
-
-private:
-    // State management
+protected:
+    // Parameters
     float threshold;
-    float ratio;
     float attack;
     float release;
-
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (UnderVolAudioProcessor);
+    float range;
+    float hold;
+    float lookahead;
+    float mix;
+    float sidechain;
 };
+
+#endif // PLUGINPROCESSOR_H_INCLUDED
